@@ -1,16 +1,34 @@
-name: Build TimeWeatherAnarchy
+
+name: Package TimeWeatherAnarchy
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  package:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Show repository files
-        run: Get-ChildItem -Recurse -Depth 3
-        shell: pwsh
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: TimeWeatherAnarchy/UI/package-lock.json
+
+      - name: Build UI
+        working-directory: TimeWeatherAnarchy/UI
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload project package
+        uses: actions/upload-artifact@v4
+        with:
+          name: TimeWeatherAnarchy-project
+          path: |
+            TimeWeatherAnarchy/
+          if-no-files-found: error
