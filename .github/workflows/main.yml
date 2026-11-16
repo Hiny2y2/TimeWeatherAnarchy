@@ -19,12 +19,6 @@ jobs:
           cache: npm
           cache-dependency-path: TimeWeatherAnarchy/UI/package-lock.json
 
-      - name: Build UI
-        working-directory: TimeWeatherAnarchy/UI
-        run: |
-          npm ci
-          npm run build
-
       - name: Upload project package
         uses: actions/upload-artifact@v4
         with:
